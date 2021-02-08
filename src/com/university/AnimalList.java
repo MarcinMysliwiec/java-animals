@@ -64,7 +64,7 @@ public class AnimalList {
                 } else {
                     throw new InputMismatchException("Podałeś niepoprawny typ danych. Oczekiwany typ - liczba");
                 }
-            } catch(InputMismatchException e ) {
+            } catch (InputMismatchException e) {
                 System.out.print("Waga musi być liczbą. Spróbuj ponownie: ");
                 CONSOLE.nextLine();
             }
@@ -129,7 +129,7 @@ public class AnimalList {
 
         while (result == null) {
             Integer action = scanForInteger();
-            if (action > 0 && action <= BillType.values().length) {
+            if (action > 0 && action <= DogBreed.values().length) {
                 result = DogBreed.values()[action - 1];
             } else {
                 System.out.print("Wybrano niepoprawną akcję. Spróbuj ponownie: ");
@@ -150,7 +150,7 @@ public class AnimalList {
 
         while (result == null) {
             Integer action = CONSOLE.nextInt();
-            if (action > 0 && action <= BillType.values().length) {
+            if (action > 0 && action <= CatBreed.values().length) {
                 result = CatBreed.values()[action - 1];
             } else {
                 System.out.print("Wybrano niepoprawną akcję. Spróbuj ponownie: ");
@@ -193,7 +193,7 @@ public class AnimalList {
                 } else {
                     throw new InputMismatchException("Podałeś niepoprawny typ danych. Oczekiwany typ - liczba");
                 }
-            } catch(InputMismatchException e ) {
+            } catch (InputMismatchException e) {
                 System.out.print("Waga musi być liczbą. Spróbuj ponownie: ");
                 CONSOLE.nextLine();
             }
@@ -392,7 +392,7 @@ public class AnimalList {
     }
 
     public void removeAnimal() {
-        if(animalArrayList.size() == 0) {
+        if (animalArrayList.size() == 0) {
             System.out.println("Nie można wykonać akcji. Baza zwierząt jest pusta.");
             return;
         }
@@ -406,7 +406,7 @@ public class AnimalList {
     }
 
     public void printAllAnimals() {
-        if(animalArrayList.size() == 0) {
+        if (animalArrayList.size() == 0) {
             System.out.println("Nie można wykonać akcji. Baza zwierząt jest pusta.");
             return;
         }
@@ -418,7 +418,7 @@ public class AnimalList {
     }
 
     public void printAllAnimalsWithName() {
-        if(animalArrayList.size() == 0) {
+        if (animalArrayList.size() == 0) {
             System.out.println("Nie można wykonać akcji. Baza zwierząt jest pusta.");
             return;
         }
@@ -430,12 +430,12 @@ public class AnimalList {
     public void printAllAnimalsWithName(String nameParam) {
         Boolean found = false;
         for (Animal animal : animalArrayList) {
-            if(animal.getName().toLowerCase().contains(nameParam.toLowerCase())) {
+            if (animal.getName().toLowerCase().contains(nameParam.toLowerCase())) {
                 found = true;
                 System.out.println(animal);
             }
         }
-        if(!found) {
+        if (!found) {
             System.out.print("Nie udało się znaleźć zwierzęcia o podanej nazwie.");
         }
         System.out.print("Wciśnij enter by kontynuować.");
@@ -443,6 +443,10 @@ public class AnimalList {
     }
 
     public void printAnimalByType() {
+        if(animalArrayList.isEmpty()) {
+            System.out.println("Nie można wykonać akcji. Baza zwierząt jest pusta.");
+            return;
+        }
         System.out.println("Jakiego typu obiekty chciałbyś zobaczyć?");
         System.out.println("1. Pies");
         System.out.println("2. Kot");
@@ -455,31 +459,40 @@ public class AnimalList {
         String animalType = null;
         try {
             while (animalType == null) {
-                Integer action = CONSOLE.nextInt();
-                if (action == 1) {
-                    animalType = Dog.class.getSimpleName();
-                } else if (action == 2) {
-                    animalType = Cat.class.getSimpleName();
-                } else if (action == 3) {
-                    animalType = Mammal.class.getSimpleName();
-                } else if (action == 4) {
-                    animalType = Bird.class.getSimpleName();
-                } else if (action == 5) {
-                    animalType = Fish.class.getSimpleName();
-                } else if (action == 6) {
-                    animalType = Reptile.class.getSimpleName();
-                } else if (action == 0) {
-                    return;
+                if (CONSOLE.hasNextInt()) {
+                    Integer action = CONSOLE.nextInt();
+                    if (action == 1) {
+                        animalType = Dog.class.getSimpleName();
+                    } else if (action == 2) {
+                        animalType = Cat.class.getSimpleName();
+                    } else if (action == 3) {
+                        animalType = Mammal.class.getSimpleName();
+                    } else if (action == 4) {
+                        animalType = Bird.class.getSimpleName();
+                    } else if (action == 5) {
+                        animalType = Fish.class.getSimpleName();
+                    } else if (action == 6) {
+                        animalType = Reptile.class.getSimpleName();
+                    } else if (action == 0) {
+                        return;
+                    } else {
+                        System.out.println("Podałeś liczbę w złym formacie. Spróbuj jeszcze raz");
+                    }
                 } else {
-                    System.out.println("Podałeś liczbę w złym formacie. Spróbuj jeszcze raz");
+                    System.out.println("Podałeś niepoprawny typ danych. Oczekiwany typ - liczba całkowita");
+                    CONSOLE.nextLine();
                 }
             }
+            Boolean isEmpty = true;
             for (Animal animal : animalArrayList) {
-                if(animal.getClass().getSimpleName() == animalType) {
+                if (animal.getClass().getSimpleName() == animalType) {
                     System.out.println(animal);
+                    isEmpty = false;
                 }
             }
-
+            if(isEmpty) {
+                System.out.println("Brak elementów do wyświetlenia.");
+            }
         } catch (Exception e) {
             System.out.println("Wystąpił nieoczekiwany błąd programu.");
         }
@@ -499,7 +512,7 @@ public class AnimalList {
 
     private void initScheduledTasks() {
         Timer timer = new Timer();
-        timer.schedule( new TimerTask() {
+        timer.schedule(new TimerTask() {
             public void run() {
                 for (Animal animal : animalArrayList) {
                     animal.decreaseFoodParam();
@@ -508,7 +521,7 @@ public class AnimalList {
                     }
                 }
             }
-        }, 0, 60*1000);
+        }, 0, 60 * 1000);
     }
 
     public void feedAnimals() {
